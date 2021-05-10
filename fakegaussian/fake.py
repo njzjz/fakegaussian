@@ -93,6 +93,10 @@ class FakeGaussian:
                        atomic_numbers[element], "% 11d" % 0, " "*3, *("% 11.6f" % c for c in coord))
         self.print("-"*69)
         self.fakeline()
+        # energy
+        self.print(
+            "SCF Done:  E(XXXXX) =  % 14.10f     A.U. after    8 cycles" % outdata['energy'])
+        self.fakeline()
         # forces
         self.print("-"*67)
         self.print("Center     Atomic                   Forces (Hartrees/Bohr)")
@@ -103,10 +107,6 @@ class FakeGaussian:
             self.print("% 6d" % ii, "% 8d" %
                        atomic_numbers[element], " "*6, *("% 14.9f" % f for f in force))
         self.print("-"*67)
-        self.fakeline()
-        # energy
-        self.print(
-            "SCF Done:  E(XXXXX) =  % 14.10f     A.U. after    8 cycles" % outdata['energy'])
         self.fakeline()
 
     def print(self, *content):
