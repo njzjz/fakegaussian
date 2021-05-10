@@ -102,6 +102,7 @@ class FakeGaussian:
         for ii, (element, force) in enumerate(zip(outdata['elements'], outdata['forces']), 1):
             self.print("% 6d" % ii, "% 8d" %
                        atomic_numbers[element], " "*6, *("% 14.9f" % f for f in force))
+        self.print("-"*67)
         self.fakeline()
         # energy
         self.print(
