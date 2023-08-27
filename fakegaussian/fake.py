@@ -75,8 +75,9 @@ class FakeGaussian:
 
     def calcalate(self, inpdata):
         # randomly generate results
-        forces = np.random.rand(*inpdata["coords"].shape)
-        energy = np.random.rand(1)
+        rng = np.random.default_rng()
+        forces = rng.rand(*inpdata["coords"].shape)
+        energy = rng.rand(1)
         return {**inpdata, "energy": energy, "forces": forces}
 
     def write(self, outdata):
@@ -130,6 +131,7 @@ class FakeGaussian:
 
     def fakeline(self):
         fakeline = """This is the fake Gaussian"""
-        nline = np.random.randint(100)
+        rng = np.random.default_rng()
+        nline = rng.randint(100)
         for _ in range(nline):
             self.print(fakeline)
