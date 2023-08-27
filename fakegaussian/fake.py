@@ -3,8 +3,9 @@ to test programs that integrate Gaussian, without really
 installing it.
 """
 import re
-import numpy as np
 import sys
+
+import numpy as np
 from ase.data import atomic_numbers
 
 
@@ -33,7 +34,7 @@ def readinp(inplines):
                 pass
             elif len(s) == 4:
                 # element
-                elements.append(re.sub(u"\\(.*?\\)|\\{.*?}|\\[.*?]", "", s[0]))
+                elements.append(re.sub("\\(.*?\\)|\\{.*?}|\\[.*?]", "", s[0]))
                 coords.append(list(map(float, s[1:4])))
         elif flag == 3:
             # end
@@ -63,7 +64,7 @@ class FakeGaussian:
         else:
             self.inplines = sys.stdin.readlines()
         if out:
-            self.outf = open(out, 'w')
+            self.outf = open(out, "w")
         else:
             self.outf = sys.stdout
 
@@ -74,39 +75,52 @@ class FakeGaussian:
 
     def calcalate(self, inpdata):
         # randomly generate results
-        forces = np.random.rand(*inpdata['coords'].shape)
-        energy = np.random.rand(1)
+        rng = np.random.default_rng()
+        forces = rng.rand(*inpdata["coords"].shape)
+        energy = rng.rand(1)
         return {**inpdata, "energy": energy, "forces": forces}
 
     def write(self, outdata):
         self.fakeline()
         # coords
-        self.print(" "*24, "Input orientation:")
-        self.print("-"*69)
-        self.print(
-            "Center     Atomic      Atomic             Coordinates (Angstroms)")
-        self.print(
-            "Number     Number       Type             X           Y           Z")
-        self.print("-"*69)
-        for ii, (element, coord) in enumerate(zip(outdata['elements'], outdata['coords']), 1):
-            self.print("% 6d" % ii, "% 10d" %
-                       atomic_numbers[element], "% 11d" % 0, " "*3, *("% 11.6f" % c for c in coord))
-        self.print("-"*69)
+        self.print(" " * 24, "Input orientation:")
+        self.print("-" * 69)
+        self.print("Center     Atomic      Atomic             Coordinates (Angstroms)")
+        self.print("Number     Number       Type             X           Y           Z")
+        self.print("-" * 69)
+        for ii, (element, coord) in enumerate(
+            zip(outdata["elements"], outdata["coords"]), 1
+        ):
+            self.print(
+                "% 6d" % ii,
+                "% 10d" % atomic_numbers[element],
+                "% 11d" % 0,
+                " " * 3,
+                *("% 11.6f" % c for c in coord),
+            )
+        self.print("-" * 69)
         self.fakeline()
         # energy
         self.print(
-            "SCF Done:  E(XXXXX) =  % 14.10f     A.U. after    8 cycles" % outdata['energy'])
+            "SCF Done:  E(XXXXX) =  % 14.10f     A.U. after    8 cycles"
+            % outdata["energy"]
+        )
         self.fakeline()
         # forces
-        self.print("-"*67)
+        self.print("-" * 67)
         self.print("Center     Atomic                   Forces (Hartrees/Bohr)")
-        self.print(
-            "Number     Number              X              Y              Z")
-        self.print("-"*67)
-        for ii, (element, force) in enumerate(zip(outdata['elements'], outdata['forces']), 1):
-            self.print("% 6d" % ii, "% 8d" %
-                       atomic_numbers[element], " "*6, *("% 14.9f" % f for f in force))
-        self.print("-"*67)
+        self.print("Number     Number              X              Y              Z")
+        self.print("-" * 67)
+        for ii, (element, force) in enumerate(
+            zip(outdata["elements"], outdata["forces"]), 1
+        ):
+            self.print(
+                "% 6d" % ii,
+                "% 8d" % atomic_numbers[element],
+                " " * 6,
+                *("% 14.9f" % f for f in force),
+            )
+        self.print("-" * 67)
         self.fakeline()
 
     def print(self, *content):
@@ -117,6 +131,7 @@ class FakeGaussian:
 
     def fakeline(self):
         fakeline = """This is the fake Gaussian"""
-        nline = np.random.randint(100)
+        rng = np.random.default_rng()
+        nline = rng.randint(100)
         for _ in range(nline):
             self.print(fakeline)

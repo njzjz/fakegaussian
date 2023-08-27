@@ -39,3 +39,27 @@ repository = "https://github.com/njzjz/fakegaussian"
 include = ["fakegaussian*"]
 
 [tool.setuptools_scm]
+
+[tool.ruff]
+select = [
+    "E", # errors
+    "F", # pyflakes
+    "D", # pydocstyle
+    "I", # isort
+    "UP", # pyupgrade
+    "C4", # flake8-comprehensions
+    "NPY", # numpy
+    "RUF", # ruff
+]
+ignore = [
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D205",
+    "E501",
+]
+
+[tool.ruff.pydocstyle]
+convention = "numpy"
