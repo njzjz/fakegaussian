@@ -2,6 +2,7 @@
 to test programs that integrate Gaussian, without really
 installing it.
 """
+
 import re
 import sys
 
